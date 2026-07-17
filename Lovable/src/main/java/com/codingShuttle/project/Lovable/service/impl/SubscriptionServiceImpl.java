@@ -159,7 +159,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
        if(currentSubscription.plan()==null)
        {
 
-           return countOfOwnedProjects<1;
+           return countOfOwnedProjects<10;
        }
 
        return countOfOwnedProjects < currentSubscription.plan().maxProjects();
