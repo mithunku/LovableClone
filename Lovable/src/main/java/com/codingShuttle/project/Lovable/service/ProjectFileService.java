@@ -5,8 +5,10 @@ import com.codingShuttle.project.Lovable.dto.files.FileNode;
 
 import java.util.List;
 
-public interface FileService {
+public interface ProjectFileService {
     List<FileNode> getFileTree(Long userId, Long projectId);
 
     FileContentResponse getFileContent(Long userId, Long projectId, String path);
+
+    void saveFile(Long projectId, String filePath, String fileContent);
 }

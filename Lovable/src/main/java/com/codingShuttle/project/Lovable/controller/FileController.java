@@ -2,7 +2,7 @@ package com.codingShuttle.project.Lovable.controller;
 
 import com.codingShuttle.project.Lovable.dto.files.FileContentResponse;
 import com.codingShuttle.project.Lovable.dto.files.FileNode;
-import com.codingShuttle.project.Lovable.service.FileService;
+import com.codingShuttle.project.Lovable.service.ProjectFileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FileController {
 
-    private final FileService fileService;
+    private final ProjectFileService fileService;
     @GetMapping
     public ResponseEntity<List<FileNode>> getFileTree(@PathVariable Long projectId)
     {
