@@ -14,6 +14,8 @@ import java.time.Instant;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
+@Builder
+
 public class ProjectFile {
 
     @Id
