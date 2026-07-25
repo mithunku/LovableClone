@@ -1,6 +1,7 @@
 package com.codingShuttle.project.Lovable.service.impl;
 
 import com.codingShuttle.project.Lovable.llm.PromptUtils;
+import com.codingShuttle.project.Lovable.llm.advisors.FileTreeContextAdvisor;
 import com.codingShuttle.project.Lovable.security.AuthUtil;
 import com.codingShuttle.project.Lovable.service.AiGenerationService;
 import com.codingShuttle.project.Lovable.service.ProjectFileService;
@@ -8,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Schedulers;
@@ -25,12 +29,14 @@ public class AiGenerationServiceImp implements AiGenerationService {
     private final AuthUtil authUtil;
     private static final Pattern FILE_TAG_PATTERN=Pattern.compile("<file path=\"([^\"]+)\">(.*?)</file>",Pattern.DOTALL);
     private final ProjectFileService projectFileService;
+    private final FileTreeContextAdvisor fileTreeContextAdvisor;
 
     @Override
     @PreAuthorize("@security.canEditProject(#projectId)")
     public Flux<String> streamResponse(String userMessage, Long projectId) {
         Long userId = authUtil.getCurrentUserId();
         createChatSessionIfNotExists(projectId, userId);
+        //context
         Map<String, Object> advisorsParams = Map.of(
                 "userId", userId,
                 "projectId", projectId
@@ -42,6 +48,7 @@ public class AiGenerationServiceImp implements AiGenerationService {
                 .user(userMessage)
                 .advisors(advisorSpec -> {
                     advisorSpec.params(advisorsParams);
+                    advisorSpec.advisors(fileTreeContextAdvisor);
 
                 })
                 .stream()
@@ -49,9 +56,17 @@ public class AiGenerationServiceImp implements AiGenerationService {
                 .doOnNext(response -> {
                     fullResponseBuffer.append(response.getResult().getOutput().getText());
                 }).doOnComplete(() -> {
+                    SecurityContext context = SecurityContextHolder.getContext();
                     //this runs in sepaaret thread
+                    log.info("Streaming completed");
                     Schedulers.boundedElastic().schedule(()->{
-                        parseAndSaveFile(fullResponseBuffer.toString(),projectId);
+                       // SecurityContextHolder.setContext(context); // restore on new thread
+                       // try {
+                            parseAndSaveFile(fullResponseBuffer.toString(), projectId);
+                       // } finally {
+                          //  SecurityContextHolder.clearContext(); // avoid leaking into pooled thread
+                       // }
+
                     });
 
                         }
@@ -67,6 +82,7 @@ public class AiGenerationServiceImp implements AiGenerationService {
         {
             String filePath=matcher.group(1);
             String fileContent=matcher.group(2).trim();
+
             projectFileService.saveFile(projectId,filePath,fileContent);
 
         }

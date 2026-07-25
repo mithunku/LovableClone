@@ -38,10 +38,10 @@ public class ProjectFileServiceImpl implements ProjectFileService {
     private final ProjectFileMapper projMapper;
 
     @Value("${minio.bucket}")
-    private final String projectBucket;
+    private String projectBucket;
 
     @Override
-    public List<FileNode> getFileTree(Long userId, Long projectId) {
+    public List<FileNode> getFileTree( Long projectId) {
         List<ProjectFile> projectFile=projectFileRepository.findByProjectId(projectId).orElseThrow(()->new ResourceNotFoundException("projectFile",String.valueOf(projectId)));
 
         return projMapper.toFileNode(projectFile);

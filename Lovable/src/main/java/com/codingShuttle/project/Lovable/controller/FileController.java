@@ -22,7 +22,7 @@ public class FileController {
     public ResponseEntity<List<FileNode>> getFileTree(@PathVariable Long projectId)
     {
         Long userId=1L;
-        return ResponseEntity.ok(fileService.getFileTree(userId,projectId));
+        return ResponseEntity.ok(fileService.getFileTree(projectId));
     }
 
     @GetMapping("/{*path}") //why * is added because we can get entire path after // example /src/path/basic.jsx
