@@ -79,6 +79,7 @@ public class AiGenerationServiceImp implements AiGenerationService {
         Matcher matcher=FILE_TAG_PATTERN.matcher(fullResponseBuffer);
 
         while(matcher.find())
+
         {
             String filePath=matcher.group(1);
             String fileContent=matcher.group(2).trim();

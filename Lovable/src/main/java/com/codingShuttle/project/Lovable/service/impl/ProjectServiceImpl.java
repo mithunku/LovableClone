@@ -14,6 +14,7 @@ import com.codingShuttle.project.Lovable.error.BadRequestException;
 import com.codingShuttle.project.Lovable.error.ResourceNotFoundException;
 import com.codingShuttle.project.Lovable.security.AuthUtil;
 import com.codingShuttle.project.Lovable.service.ProjectService;
+import com.codingShuttle.project.Lovable.service.ProjectTemplateService;
 import com.codingShuttle.project.Lovable.service.SubscriptionService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,7 @@ public class ProjectServiceImpl implements ProjectService {
     private final AuthUtil authUtil;
     private final ProjectMemberRepository projectMemberRepository;
     private final SubscriptionService subscriptionService;
+    private final ProjectTemplateService projectTemplateService;
     @Override
     public List<ProjectSummaryResponse> getUserProjects() {
         Long userId=authUtil.getCurrentUserId();
@@ -81,6 +83,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .build();
 
         projectMemberRepository.save(projectMember);
+        projectTemplateService.initilaizeProjectFromTemplate(project.getId());
         return projectMapper.toProjectResponse(project);
     }
 
