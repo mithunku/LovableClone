@@ -29,7 +29,7 @@ public class FileController {
     public ResponseEntity<FileContentResponse> getFileNode(@PathVariable Long projectId,@PathVariable String path)
     {
         Long userId=1L;
-        return ResponseEntity.ok(fileService.getFileContent(userId,projectId,path));
+        return ResponseEntity.ok(fileService.getFileContent(projectId,path));
 
     }
 }

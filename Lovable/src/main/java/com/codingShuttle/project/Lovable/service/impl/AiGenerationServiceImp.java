@@ -2,6 +2,7 @@ package com.codingShuttle.project.Lovable.service.impl;
 
 import com.codingShuttle.project.Lovable.llm.PromptUtils;
 import com.codingShuttle.project.Lovable.llm.advisors.FileTreeContextAdvisor;
+import com.codingShuttle.project.Lovable.llm.tools.CodeGenerationTools;
 import com.codingShuttle.project.Lovable.security.AuthUtil;
 import com.codingShuttle.project.Lovable.service.AiGenerationService;
 import com.codingShuttle.project.Lovable.service.ProjectFileService;
@@ -44,8 +45,10 @@ public class AiGenerationServiceImp implements AiGenerationService {
                 );
 
         StringBuilder fullResponseBuffer =new StringBuilder();
+        CodeGenerationTools codeGenerationTools =new CodeGenerationTools(projectFileService,projectId);
         return chatClient.prompt().system(PromptUtils.CODE_GENERATION_SYSTEM_PROMPT)
                 .user(userMessage)
+                //.tools(codeGenerationTools)
                 .advisors(advisorSpec -> {
                     advisorSpec.params(advisorsParams);
                     advisorSpec.advisors(fileTreeContextAdvisor);

@@ -83,7 +83,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .build();
 
         projectMemberRepository.save(projectMember);
-        projectTemplateService.initilaizeProjectFromTemplate(project.getId());
+       // projectTemplateService.initilaizeProjectFromTemplate(project.getId());
         return projectMapper.toProjectResponse(project);
     }
 
