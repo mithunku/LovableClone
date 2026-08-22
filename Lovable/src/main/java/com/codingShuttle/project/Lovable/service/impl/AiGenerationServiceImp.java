@@ -48,7 +48,7 @@ public class AiGenerationServiceImp implements AiGenerationService {
         CodeGenerationTools codeGenerationTools =new CodeGenerationTools(projectFileService,projectId);
         return chatClient.prompt().system(PromptUtils.CODE_GENERATION_SYSTEM_PROMPT)
                 .user(userMessage)
-                //.tools(codeGenerationTools)
+                .tools(codeGenerationTools)
                 .advisors(advisorSpec -> {
                     advisorSpec.params(advisorsParams);
                     advisorSpec.advisors(fileTreeContextAdvisor);
