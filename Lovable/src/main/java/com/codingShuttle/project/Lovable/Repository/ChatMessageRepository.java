@@ -4,9 +4,11 @@ import com.codingShuttle.project.Lovable.entity.ChatMessage;
 import com.codingShuttle.project.Lovable.entity.ChatSession;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface ChatMessageRepository extends JpaRepository<ChatMessage,Long> {
 
     //here we use fetch to avoid N+1 db queries fetch will get all data in one query

@@ -9,11 +9,13 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.Instant;
 import java.util.List;
 
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Builder
 public class ChatMessage {
 
     @Id
@@ -29,7 +31,7 @@ public class ChatMessage {
     )
     ChatSession chatSession;
 
-    @Column(columnDefinition = "text",nullable = false)
+    @Column(columnDefinition = "text")
     String content;
 
     @Enumerated(EnumType.STRING)
