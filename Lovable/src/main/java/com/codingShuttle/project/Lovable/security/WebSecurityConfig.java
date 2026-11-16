@@ -28,7 +28,7 @@ public class WebSecurityConfig{
         httpSecurity.formLogin(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement((sessionConfig)->sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth->auth.requestMatchers("/api/auth/**","/webhooks/**").permitAll()
+                .authorizeHttpRequests(auth->auth.requestMatchers("/api/auth/**","/webhooks/**","/swagger-ui/*","/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
